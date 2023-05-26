@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Current Weather</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url("{% static 'bluesky3.jpg' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="weather-container">
+        <div class="weather-card-now">
+            <h2>The Weather Now</h2>
+            <p>Temperature: {{ current_weather.temperature }}°C</p>
+            <p>Feels Like: {{ current_weather.feels_like }}°C</p>
+            <p>Humidity: {{ current_weather.humidity }}%</p>
+        </div>
+
+        <div class="weather-card">
+            <h2>Today</h2>
+            <p>Temperature: {{ today_weather.temperature }}°C</p>
+            <p>Feels Like: {{ today_weather.feels_like }}°C</p>
+            <p>Humidity: {{ today_weather.humidity }}%</p>
+        </div>
+
+        <div class="weather-card">
+            <h2>Tomorrow</h2>
+            <p>Temperature: {{ tomorrow_weather.temperature }}°C</p>
+            <p>Feels Like: {{ tomorrow_weather.feels_like }}°C</p>
+            <p>Humidity: {{ tomorrow_weather.humidity }}%</p>
+        </div>
+
+        <div class="weather-card-the-day-after-tomorrow">
+            <h2 class = "day-after-tomorrow">Day After Tomorrow</h2>
+            <p>Temperature: {{ day_after_tomorrow_weather.temperature }}°C</p>
+            <p>Feels Like: {{ day_after_tomorrow_weather.feels_like }}°C</p>
+            <p>Humidity: {{ day_after_tomorrow_weather.humidity }}%</p>
+        </div>
+    </div>
+</body>
+</html>

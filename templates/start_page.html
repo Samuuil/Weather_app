@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Weather App</title>
+	<link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<style>
+    body {
+    margin: 0;
+    padding: 0;
+    background-image: url("{% static 'bluesky3.jpg' %}");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+</style>
+<body>
+  	<div class="container">
+		<h1>Welcome to the Weather App!</h1>
+    	<p>Explore the weather in various locations</p>
+    	<form action="{% url 'current_weather' %}" method="POST">
+      		{% csrf_token %}
+      		<input type="text" name="location" placeholder="Enter a city name">
+      		<input type="submit" value="Search">
+    	</form>
+    
+    	<h2>Famous Locations</h2>
+    
+			<div class="famous-locations">
+				<div class="famous-location tokyo">
+					<h3>Tokyo</h3>
+					<p><span class="min-temp">{{ famous_locations.2.min_temp }}</span> / <span class="max-temp">{{ famous_locations.2.max_temp }}</span></p>
+			  		<p>Status: {{ famous_locations.2.status }}</p>
+					<style>
+						.tokyo {
+    						background-image: url("{% static 'tokyo3.jpg' %}");
+ 						 }
+					</style>
+				</div>
+				<div class="famous-location london">
+			  		<h3>London</h3>
+			  		<p><span class="min-temp">{{ famous_locations.1.min_temp }}</span> / <span class="max-temp">{{ famous_locations.1.max_temp }}</span></p>
+			  		<p>Status: {{ famous_locations.1.status }}</p>
+					<style>
+					  	.london {
+    						background-image: url("{% static 'london2.jpg' %}");
+  						}
+					</style>
+				</div>
+				<div class="famous-location nyc">
+			  		<h3>NYC</h3>
+			  		<p><span class="min-temp">{{ famous_locations.0.min_temp }}</span> / <span class="max-temp">{{ famous_locations.0.max_temp }}</span></p>
+			  		<p>Status: {{ famous_locations.0.status }}</p>
+					<style>				
+					.nyc {
+						background-image: url("{% static 'newyork2.jpg' %}");
+					}
+					</style>	
+				</div>
+		  	</div>
+  </div>
+</body>
+</html>
