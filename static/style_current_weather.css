@@ -1,95 +1,3 @@
-
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-	width: 100%;
-    text-align: center;
-}
-  
-h1 {
-    font-size: 32px;
-    margin-bottom: 10px;
-}
-  
-p {
-    font-size: 18px;
-    margin-bottom: 20px;
-}
-  
-form {
-    margin-bottom: 20px;
-}
-  
-input[type="text"] {
-    padding: 8px;
-    font-size: 16px;
-    width: 200px;
-}
-  
-input[type="submit"] {
-    padding: 8px 20px;
-    font-size: 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-  
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-  
-li {
-    margin-bottom: 10px;
-}
-  
-a {
-    text-decoration: none;
-    color: #4CAF50;
-    font-size: 16px;
-}
-  
-a:hover {
-    text-decoration: underline;
-}
-
-
-  
-
-.famous-locations {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 20px;
-}
-
-.famous-location {
-    width: 300px;
-    height: 400px;
-    padding: 10px;
-    border: 3px solid rgb(0, 0, 0);
-    border-radius: 10px;
-    text-align: center;
-}  
-.famous-location {
-    background-size: cover;
-    background-position: center;
-}
-
-.min-temp {
-	color: darkblue;
-}
-
-.max-temp {
-	color: red;
-}
-
-
-
-
 .weather-card-now {
     padding: 20px;
     margin: 10px;
@@ -170,11 +78,8 @@ h2.day-after-tomorrow {
     margin-top: 15px;
 }
 
-
-
-
-
-
-  
-
-  
+.humidity-picture{
+    width: 50px;
+    height: auto;
+    margin-top: 10px;
+}

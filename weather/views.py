@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User, auth
+from django.contrib import messages
 from pyowm import OWM
 # Create your views here.
 
@@ -76,5 +78,29 @@ def current_weather(request):
             'status': weather_info[4],
         }
         return render(request, 'current_weather.html', data)
+    else:
+        return render(request, 'start_page.html')
 
-    return render(request, 'start_page.html')
+def register (request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        password_confirm = request.POST['confirm-password']
+
+        if password == password_confirm:
+            if User.objects.filter(email = email).exists:
+                messages.info(request, 'Email in use')
+                return redirect('register')
+            elif User.objects.filter(username = username).exists:
+                messages.info(request, 'Username in use')
+                return redirect('register')
+            else:
+                user = User.objects.create_user(username = username, email = email, password = password)
+                user.save();
+                return redirect('login')
+        else:
+            messages.info(request, 'Passwords do not match')
+            return redirect('register')
+    else:
+        return render(request, 'register.html')

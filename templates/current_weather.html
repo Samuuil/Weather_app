@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Current Weather</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'style_current_weather.css' %}">
     <style>
         body {
             margin: 0;
@@ -32,8 +32,8 @@
             <div class = "weather-word">
                Feels like {{temp_feels_like}} °C
             </div>
-            <div class="weather-humidity-wind">
-                
+            <div class="weather-humidity">
+                <img src="{% static 'waterdrop.jpg' %}" class="humidity-picture">
             </div>
           </div>
 

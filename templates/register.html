@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Registration</title>
+	<link rel="stylesheet" href="{% static 'style_register.css' %}">
+</head>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-image: url("{% static 'bluesky3.jpg' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+    }
+</style>
+<body>
+	<div class="container">
+		<h1>Registration</h1>
+        {% for message in messages %}
+        <h5>{{message}}</h5>
+        {% endfor %}
+		<form action="" method="POST">
+			{% csrf_token %}
+			<div class="form-group">
+				<label for="username">Username:</label>
+				<input type="text" id="username" name="username" required>
+			</div>
+			<div class="form-group">
+				<label for="email">Email:</label>
+				<input type="email" id="email" name="email" required>
+			</div>
+			<div class="form-group">
+				<label for="password">Password:</label>
+				<input type="password" id="password" name="password" required>
+			</div>
+			<div class="form-group">
+				<label for="confirm-password">Confirm Password:</label>
+				<input type="password" id="confirm-password" name="confirm-password" required>
+			</div>
+			<input type="submit" value="Register">
+		</form>
+	</div>
+</body>
+</html>
