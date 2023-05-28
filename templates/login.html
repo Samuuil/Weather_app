@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Registration</title>
+	<title>Login</title>
 	<link rel="stylesheet" href="{% static 'style_register_login.css' %}">
 </head>
 <style>
@@ -20,7 +20,7 @@
 </style>
 <body>
 	<div class="container">
-		<h1>Registration</h1>
+		<h1>Login</h1>
         {% for message in messages %}
         <h5>{{message}}</h5>
         {% endfor %}
@@ -38,15 +38,8 @@
 				<label for="password">Password:</label>
 				<input type="password" id="password" name="password" required>
 			</div>
-			<div class="form-group">
-				<label for="confirm-password">Confirm Password:</label>
-				<input type="password" id="confirm-password" name="confirm-password" required>
-			</div>
-			<input type="submit" value="Register">
+			<input type="submit" value="Login">
 		</form>
-        <p class = "already-account">Already have an account? 
-            <a href="/login">Login</a>
-        </p>
 	</div>
 </body>
 </html>

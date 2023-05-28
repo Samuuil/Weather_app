@@ -84,19 +84,19 @@ def current_weather(request):
 def register (request):
     if request.method == 'POST':
         username = request.POST['username']
-        email = request.POST['email']
+        emaill = request.POST['email']
         password = request.POST['password']
         password_confirm = request.POST['confirm-password']
 
         if password == password_confirm:
-            if User.objects.filter(email = email).exists:
+            if User.objects.filter(email = emaill).exists():
                 messages.info(request, 'Email in use')
                 return redirect('register')
-            elif User.objects.filter(username = username).exists:
+            elif User.objects.filter(username = username).exists():
                 messages.info(request, 'Username in use')
                 return redirect('register')
             else:
-                user = User.objects.create_user(username = username, email = email, password = password)
+                user = User.objects.create_user(username = username, email = emaill, password = password)
                 user.save();
                 return redirect('login')
         else:
@@ -104,3 +104,19 @@ def register (request):
             return redirect('register')
     else:
         return render(request, 'register.html')
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+
+        user = auth.authenticate(username = username, email = email, password = password)
+        if user is not None:
+            auth.login(request, user)
+            return redirect('/')
+        else:
+            messages.info(request, 'Pravish neshto greshno ddz')
+            return redirect('login')
+    else:
+        return render(request, 'login.html')
