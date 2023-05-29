@@ -23,40 +23,43 @@
         <div class="weather-card-now">
             <h2>The weather now</h2>
             <div class="weather-status-pic">
-                {% if status == 'few clouds' %}
-                    <img src="{% static 'someclouds.jpg' %}" class="status-img">
-                {% endif %}
+                <img src="{% static status_pic %}" class="status-img">
                 <div class="temp-rn">{{ current_temp }} °C</div>
             </div>
             <div class="weather-word">{{status}}</div>
             <div class = "weather-word">
                Feels like {{temp_feels_like}} °C
             </div>
-            <div class="weather-humidity">
+            <div class="weather-humidity-wind">
                 <img src="{% static 'waterdrop.jpg' %}" class="humidity-picture">
+                <img src="{% static 'wind.jpg' %}" class="wind-picture">
+            </div>
+            <div class="weather-humidity-wind-values">
+                <p class="humidity">{{ humidity }}%</p>
+                <p class="wind">{{ wind }}m/s</p>
             </div>
           </div>
 
-        <div class="weather-card">
+        <div class="weather-card-today">
             <h2>Today</h2>
-            <p>Temperature: {{ today_weather.temperature }}°C</p>
+            <p>Temperature: <span class="min-temp">{{min_temp}}</span> / <span class="max-temp">{{max_temp}}</span>°</p>
             <p>Feels Like: {{ today_weather.feels_like }}°C</p>
             <p>Humidity: {{ today_weather.humidity }}%</p>
         </div>
 
-        <div class="weather-card">
+        <div class="weather-card-tomorrow">
             <h2>Tomorrow</h2>
             <p>Temperature: {{ tomorrow_weather.temperature }}°C</p>
             <p>Feels Like: {{ tomorrow_weather.feels_like }}°C</p>
             <p>Humidity: {{ tomorrow_weather.humidity }}%</p>
         </div>
 
-        <div class="weather-card-the-day-after-tomorrow">
+        <!-- <div class="weather-card-the-day-after-tomorrow">
             <h2 class = "day-after-tomorrow">Day After Tomorrow</h2>
             <p>Temperature: {{ day_after_tomorrow_weather.temperature }}°C</p>
             <p>Feels Like: {{ day_after_tomorrow_weather.feels_like }}°C</p>
             <p>Humidity: {{ day_after_tomorrow_weather.humidity }}%</p>
-        </div>
+        </div> -->
     </div>
 </body>
 </html>

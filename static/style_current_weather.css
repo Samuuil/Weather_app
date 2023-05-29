@@ -4,13 +4,13 @@
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    height: 250px;
+    height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
 }
 
-.weather-card {
+.weather-card-today, .weather-card-tomorrow {
     padding: 20px;
     margin: 5px;
     background-color: rgba(255, 255, 255, 0.8);
@@ -18,6 +18,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     flex: 1;
     margin-top: 110px;
+    width: 150px;
 }  
 .weather-card h2 {
 	margin-top: 0;
@@ -78,8 +79,47 @@ h2.day-after-tomorrow {
     margin-top: 15px;
 }
 
-.humidity-picture{
-    width: 50px;
-    height: auto;
-    margin-top: 10px;
+.weather-humidity-wind {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+  
+.humidity-picture, .wind-picture {
+    width: 30px;
+    height: auto;
+    margin-top: 20px;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.weather-humidity-wind-values {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.humidity{
+    margin-left: 20px;
+    font-size: 20px;
+}
+.wind{
+    margin-left: 70px;
+    margin-right: 15px;
+    font-size: 20px;
+}
+
+.min-temp {
+	color: darkblue;
+}
+
+.max-temp {
+	color: red;
+}
+  
+  
+
+  
+  
+  
+  

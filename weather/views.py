@@ -13,7 +13,7 @@ def get_weather_info_for_home_page(city):
     all_temperature = weather.temperature('celsius')
     min_temp = all_temperature['temp_min']
     max_temp = all_temperature['temp_max']
-    status = weather.detailed_status
+    status = weather.status
     return round(min_temp), round(max_temp), status
     
 def get_weather_info_for_second_page(city):
@@ -26,14 +26,16 @@ def get_weather_info_for_second_page(city):
     max_temp = all_temperature['temp_max']
     current_temp = all_temperature['temp']
     temp_feels_like = all_temperature['feels_like']
-    status = weather.detailed_status
-    return round(min_temp), round(max_temp), round(current_temp), round(temp_feels_like), status
+    status = weather.status
+    humidity = weather.humidity
+    wind_speed = weather.wind().get('speed')
+    return round(min_temp), round(max_temp), round(current_temp), round(temp_feels_like), status, humidity, round(wind_speed)
 
 
 def start_page(request):
     famous_locations = [
         {
-            'name': 'Paris',
+            'name': 'New York',
             'min_temp': None,
             'max_temp': None,
             'status': None,
@@ -69,13 +71,35 @@ def current_weather(request):
     if request.method == 'POST':
         location = request.POST.get('location')
         weather_info = get_weather_info_for_second_page(location)
+        status = weather_info[4]
+        status_pictures = {
+            'clear' : 'clear.jpg',
+            'ash' : 'ash.jpg',
+            'clouds' : 'clouds.jpg',
+            'drizzle' : 'drizzle.jpg',
+            'dust' : 'dust.jpg',
+            'fog' : 'fog.jpg',
+            'haze' : 'haze.jpg',
+            'mist' : 'mist.jpg',
+            'rain' : 'rain.jpg',
+            'sand' : 'sand.jpg',
+            'smoke' : 'smoke.jpg',
+            'snow' : 'snow.jpg',
+            'squall' : 'squall.jpg',
+            'thunderstorm' : 'thunderstorm.jpg',
+            'tornado' : 'tornado'
+        }
+        status_image = status_pictures.get(status.lower(), 'default_image.jpg')
         data = {
             'city': location,
             'min_temp': weather_info[0],
             'max_temp': weather_info[1],
             'current_temp' : weather_info[2],
             'temp_feels_like' : weather_info[3],
-            'status': weather_info[4],
+            'status': status,
+            'status_pic' : status_image,
+            'humidity' : weather_info[5],
+            'wind' : weather_info[6]
         }
         return render(request, 'current_weather.html', data)
     else:
