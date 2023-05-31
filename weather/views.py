@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from pyowm import OWM
+from suntime import Sun, SunTimeException
+import datetime
 # Create your views here.
 
 
@@ -21,15 +23,59 @@ def get_weather_info_for_second_page(city):
     mgr = owm.weather_manager()
     observation = mgr.weather_at_place(city)
     weather = observation.weather
+    location = observation.location
+    
+    latitude = location.lat
+    longitude = location.lon
+
     all_temperature = weather.temperature('celsius')
     min_temp = all_temperature['temp_min']
     max_temp = all_temperature['temp_max']
     current_temp = all_temperature['temp']
     temp_feels_like = all_temperature['feels_like']
+
     status = weather.status
     humidity = weather.humidity
     wind_speed = weather.wind().get('speed')
-    return round(min_temp), round(max_temp), round(current_temp), round(temp_feels_like), status, humidity, round(wind_speed)
+    
+    date = datetime.date.today()
+    date = date.strftime('%d-%m-%Y')
+
+    tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+    tomorrow = tomorrow.strftime('%d-%m-%Y')
+
+    day_after_tomorrow = datetime.datetime.now() + datetime.timedelta(days=2)
+    day_after_tomorrow_date = day_after_tomorrow.date()
+    date_day = datetime.datetime.strptime(str(day_after_tomorrow_date), '%Y-%m-%d').date()
+    day_of_week_after_tomorrow = date_day.strftime('%A')
+    day_after_tomorrow_formatted = day_after_tomorrow.strftime('%d-%m-%Y')
+    
+    sun = Sun(latitude, longitude)
+    abd = datetime.date.today()
+    sunrise = sun.get_local_sunrise_time(abd)
+    sunset= sun.get_local_sunset_time(abd)
+    sunrise_formatted = sunrise.strftime('%H:%M')
+    sunset_formatted = sunset.strftime('%H:%M')
+
+    return round(min_temp), round(max_temp), round(current_temp), round(temp_feels_like), status, humidity, round(wind_speed),\
+    date, tomorrow, day_of_week_after_tomorrow, day_after_tomorrow_formatted, sunrise_formatted, sunset_formatted
+
+# def get_3_hour_info(city):
+#     owm = OWM('5bb16486eac2780614b1d9c1457c5f51')
+#     mgr = owm.weather_manager()
+
+#     forecast = mgr.forecast_at_place("Berlin,DE", '3h')
+#     weather_list = forecast.forecast
+
+#     for weather in weather_list:
+#         date = weather.reference_time('date').strftime('%Y-%m-%d')
+#         temperature = weather.temperature(unit='celsius')
+#         min_temp = temperature['temp_min']
+#         max_temp = temperature['temp_max']
+#         humidity = weather.humidity
+#         wind_speed = weather.wind().get('speed')
+#         weather_status = weather.status
+#         weather_detailed_status = weather.detailed_status
 
 
 def start_page(request):
@@ -87,7 +133,7 @@ def current_weather(request):
             'snow' : 'snow.jpg',
             'squall' : 'squall.jpg',
             'thunderstorm' : 'thunderstorm.jpg',
-            'tornado' : 'tornado'
+            'tornado' : 'tornado.jpg'
         }
         status_image = status_pictures.get(status.lower(), 'default_image.jpg')
         data = {
@@ -99,8 +145,15 @@ def current_weather(request):
             'status': status,
             'status_pic' : status_image,
             'humidity' : weather_info[5],
-            'wind' : weather_info[6]
+            'wind' : weather_info[6],
+            'date' : weather_info[7],
+            'tomorrow' : weather_info[8],
+            'day_of_week_after_tomorrow' : weather_info[9],
+            'day_after_tomorrow_formated' : weather_info[10],
+            'sunrise' : weather_info[11],
+            'sunset' : weather_info[12]
         }
+
         return render(request, 'current_weather.html', data)
     else:
         return render(request, 'start_page.html')

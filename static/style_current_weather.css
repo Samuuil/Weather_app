@@ -39,16 +39,12 @@
     margin-top: 110px;
 }
 
-h2.day-after-tomorrow {
-    font-size: 15px;
-}
 
 .weather-container {
     margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 800px;
     height: 100vh;
 }
 
@@ -117,8 +113,28 @@ h2.day-after-tomorrow {
 	color: red;
 }
   
-  
+.weather-card-now h2,
+.weather-card-now h4,
+.weather-card-today h2,
+.weather-card-today h4,
+.weather-card-tomorrow h2,
+.weather-card-tomorrow h4 {
+  text-align: center;
+  margin: 0 auto;
+}
 
+.sunrise-sunset {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sunrise-picture,
+.sunset-picture {
+    width: 50px;
+    height: auto;
+    margin: 20px;
+}
   
   
   
