@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from pyowm import OWM
-from suntime import Sun, SunTimeException
 import datetime
+from collections import Counter
 # Create your views here.
 
 
@@ -16,17 +16,15 @@ def get_weather_info_for_home_page(city):
     min_temp = all_temperature['temp_min']
     max_temp = all_temperature['temp_max']
     status = weather.status
-    return round(min_temp), round(max_temp), status
-    
+    return round(min_temp), round(max_temp), status    
+
+
+
 def get_weather_info_for_second_page(city):
     owm = OWM('5bb16486eac2780614b1d9c1457c5f51')
     mgr = owm.weather_manager()
     observation = mgr.weather_at_place(city)
     weather = observation.weather
-    location = observation.location
-    
-    latitude = location.lat
-    longitude = location.lon
 
     all_temperature = weather.temperature('celsius')
     min_temp = all_temperature['temp_min']
@@ -42,40 +40,77 @@ def get_weather_info_for_second_page(city):
     date = date.strftime('%d-%m-%Y')
 
     tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
-    tomorrow = tomorrow.strftime('%d-%m-%Y')
+    tomorrow = tomorrow.strftime('%Y-%m-%d')
 
     day_after_tomorrow = datetime.datetime.now() + datetime.timedelta(days=2)
     day_after_tomorrow_date = day_after_tomorrow.date()
     date_day = datetime.datetime.strptime(str(day_after_tomorrow_date), '%Y-%m-%d').date()
     day_of_week_after_tomorrow = date_day.strftime('%A')
     day_after_tomorrow_formatted = day_after_tomorrow.strftime('%d-%m-%Y')
-    
-    sun = Sun(latitude, longitude)
-    abd = datetime.date.today()
-    sunrise = sun.get_local_sunrise_time(abd)
-    sunset= sun.get_local_sunset_time(abd)
-    sunrise_formatted = sunrise.strftime('%H:%M')
-    sunset_formatted = sunset.strftime('%H:%M')
 
     return round(min_temp), round(max_temp), round(current_temp), round(temp_feels_like), status, humidity, round(wind_speed),\
-    date, tomorrow, day_of_week_after_tomorrow, day_after_tomorrow_formatted, sunrise_formatted, sunset_formatted
+    date, tomorrow, day_of_week_after_tomorrow, day_after_tomorrow_formatted
 
-# def get_3_hour_info(city):
-#     owm = OWM('5bb16486eac2780614b1d9c1457c5f51')
-#     mgr = owm.weather_manager()
 
-#     forecast = mgr.forecast_at_place("Berlin,DE", '3h')
-#     weather_list = forecast.forecast
 
-#     for weather in weather_list:
-#         date = weather.reference_time('date').strftime('%Y-%m-%d')
-#         temperature = weather.temperature(unit='celsius')
-#         min_temp = temperature['temp_min']
-#         max_temp = temperature['temp_max']
-#         humidity = weather.humidity
-#         wind_speed = weather.wind().get('speed')
-#         weather_status = weather.status
-#         weather_detailed_status = weather.detailed_status
+def get_weather_forecast(city):
+    owm = OWM('5bb16486eac2780614b1d9c1457c5f51')
+    mgr = owm.weather_manager()
+    forecast = mgr.forecast_at_place(city, '3h')
+    weather_list = forecast.forecast
+
+    weather_data = {}
+    daily_status = {}
+
+    for weather in weather_list:
+        date = weather.reference_time('date').strftime('%Y-%m-%d')
+        temperature = weather.temperature(unit='celsius')
+        min_temp = temperature['temp_min']
+        max_temp = temperature['temp_max']
+        humidity = weather.humidity
+        wind_speed = weather.wind().get('speed')
+        status = weather.status
+
+        if date in weather_data:
+            if min_temp < weather_data[date]['min_temp']:
+                weather_data[date]['min_temp'] = min_temp
+            if max_temp > weather_data[date]['max_temp']:
+                weather_data[date]['max_temp'] = max_temp
+        else:
+            weather_data[date] = {
+                'min_temp': min_temp,
+                'max_temp': max_temp,
+                'wind_speeds': [wind_speed],
+                'humidities': [humidity],
+            }
+
+        if date in daily_status:
+            daily_status[date].append(status)
+        else:
+            daily_status[date] = [status]
+
+        weather_data[date]['wind_speeds'].append(wind_speed)
+        weather_data[date]['humidities'].append(humidity)
+
+    weather_info = []
+    for date, data in weather_data.items():
+        avg_wind_speed = sum(data['wind_speeds']) / len(data['wind_speeds'])
+        avg_humidity = sum(data['humidities']) / len(data['humidities'])
+        most_common_status = Counter(daily_status[date]).most_common(1)[0][0]
+
+        forecast_data = {
+            'date': date,
+            'min_temp': data['min_temp'],
+            'max_temp': data['max_temp'],
+            'wind_speed': avg_wind_speed,
+            'humidity': avg_humidity,
+            'most_common_status': most_common_status
+        }
+        
+        weather_info.append(forecast_data)
+    
+    return weather_info
+
 
 
 def start_page(request):
@@ -113,10 +148,28 @@ def start_page(request):
     return render(request, 'start_page.html', data)
 
 
+
 def current_weather(request):
     if request.method == 'POST':
         location = request.POST.get('location')
         weather_info = get_weather_info_for_second_page(location)
+        weather_forecast = get_weather_forecast(location)
+        tomorrow_data = None 
+        tomorrow_tomorrow_data = None
+        tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+        tomorrow = str(tomorrow.strftime('%Y-%m-%d'))
+        tomorrow_tomorrow = datetime.datetime.now() + datetime.timedelta(days=2)
+        tomorrow_tomorrow = str(tomorrow_tomorrow.strftime('%Y-%m-%d'))
+        for forecast in weather_forecast:
+            date = forecast['date']
+            date = datetime.datetime.strptime(str(date), '%Y-%m-%d') 
+            date = str(date.date())
+            if date == tomorrow:
+                tomorrow_data = forecast
+            if date == tomorrow_tomorrow:
+                tomorrow_tomorrow_data = forecast
+                break
+
         status = weather_info[4]
         status_pictures = {
             'clear' : 'clear.jpg',
@@ -136,27 +189,44 @@ def current_weather(request):
             'tornado' : 'tornado.jpg'
         }
         status_image = status_pictures.get(status.lower(), 'default_image.jpg')
-        data = {
-            'city': location,
-            'min_temp': weather_info[0],
-            'max_temp': weather_info[1],
-            'current_temp' : weather_info[2],
-            'temp_feels_like' : weather_info[3],
-            'status': status,
-            'status_pic' : status_image,
-            'humidity' : weather_info[5],
-            'wind' : weather_info[6],
-            'date' : weather_info[7],
-            'tomorrow' : weather_info[8],
-            'day_of_week_after_tomorrow' : weather_info[9],
-            'day_after_tomorrow_formated' : weather_info[10],
-            'sunrise' : weather_info[11],
-            'sunset' : weather_info[12]
-        }
-
-        return render(request, 'current_weather.html', data)
+            
+        if tomorrow_data and tomorrow_tomorrow_data:
+            tomorrow_status = tomorrow_data['most_common_status']
+            status_image_tomorrow = status_pictures.get(tomorrow_status.lower(), 'default_image.jpg')
+            tomorrow_tomorrow_status = tomorrow_tomorrow_data['most_common_status']
+            status_image_tomorrow_tomorrow = status_pictures.get(tomorrow_tomorrow_status.lower(), 'default_image.jpg')
+            data = {
+                'city': location,
+                'min_temp': weather_info[0],
+                'max_temp': weather_info[1],
+                'current_temp' : weather_info[2],
+                'temp_feels_like' : weather_info[3],
+                'status': status,
+                'status_pic' : status_image,
+                'humidity' : weather_info[5],
+                'wind' : weather_info[6],
+                'date' : weather_info[7],
+                'tomorrow' : weather_info[8],
+                'day_of_week_after_tomorrow' : weather_info[9],
+                'day_after_tomorrow_formated' : weather_info[10],
+                'tomorrow_wind' : round(tomorrow_data['wind_speed']),
+                'tomorrow_humidity' : round(tomorrow_data['humidity']),
+                'most_common_status_tomorrow' :status_image_tomorrow,
+                'tomorrow_min_temp' : round(tomorrow_data['min_temp']),
+                'tomorrow_max_temp' : round(tomorrow_data['max_temp']),
+                'tomorrow_tomorrow_wind' : round(tomorrow_tomorrow_data['wind_speed']),
+                'tomorrow_tomorrow_humidity' : round(tomorrow_tomorrow_data['humidity']),
+                'most_common_status_tomorrow_tomorrow' : status_image_tomorrow_tomorrow,
+                'tomorrow_tomorrow_min_temp' : round(tomorrow_tomorrow_data['min_temp']),
+                'tomorrow_tomorrow_max_temp' : round (tomorrow_tomorrow_data['max_temp'])
+            }
+            data['tomorrow_status'] = tomorrow_data['most_common_status']
+            return render(request, 'current_weather.html', data)
+        
     else:
         return render(request, 'start_page.html')
+
+
 
 def register (request):
     if request.method == 'POST':
@@ -181,6 +251,8 @@ def register (request):
             return redirect('register')
     else:
         return render(request, 'register.html')
+
+
 
 def login(request):
     if request.method == 'POST':

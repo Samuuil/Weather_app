@@ -40,26 +40,30 @@
             </div>
           </div>
 
-        <div class="weather-card-today">
+        <div class="weather-card-tomorrow">
             <h2>Today</h2>
             <h4>{{date}}</h4>
-            <p>Temperature: <span class="min-temp">{{min_temp}}</span> / <span class="max-temp">{{max_temp}}</span>°</p>
-            <div class = "sunrise-sunset">
-                <img src = "{% static 'sunrise4.jpg' %}" class="sunrise-picture">
-                <img src = "{% static 'sunset2.jpg' %}" class="sunset-picture">
+            <div class = "temperature-container">
+                <p><span class="min-temp">{{ min_temp }}</span> / <span class="max-temp">{{ max_temp }}</span></p>
             </div>
+            <img src="{% static status_pic %}" class="status-img">
+            <p>Wind {{ wind }} m/s</p>
         </div>
 
         <div class="weather-card-tomorrow">
             <h2>Tomorrow</h2>
             <h4>{{tomorrow}}</h4>
-            <p>Temperature: {{ tomorrow_weather.temperature }}°C</p>
+            <p><span class="min-temp">{{ tomorrow_min_temp }}</span> / <span class="max-temp">{{ tomorrow_max_temp }}</span></p>
+            <img src="{% static most_common_status_tomorrow %}" class="status-img">
+            <p>Wind: {{ tomorrow_wind }} m/s</p>
         </div>
 
         <div class="weather-card-tomorrow">
             <h2>{{day_of_week_after_tomorrow}}</h2>
             <h4>{{day_after_tomorrow_formated}}</h4>
-            <p>Temperature: {{ day_after_tomorrow_weather.temperature }}°C</p>
+            <p><span class="min-temp">{{ tomorrow_tomorrow_min_temp }}</span> / <span class="max-temp">{{ tomorrow_tomorrow_max_temp }}</span></p>
+            <img src="{% static most_common_status_tomorrow_tomorrow %}" class="status-img">
+            <p>Wind: {{ tomorrow_wind }} m/s</p>
         </div>
     </div>
 </body>
