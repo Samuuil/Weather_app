@@ -8,4 +8,5 @@ urlpatterns = [
     path('login/', views.login, name = 'login'),
     path('hourly-forecast/', views.hourly_forecast, name = 'hourly_forecast'),
     path('daily-forecast/', views.daily_forecast, name = 'daily_forecast'),
+    path('maps/', views.map, name = 'map'),
 ]

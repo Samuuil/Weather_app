@@ -300,6 +300,21 @@ def hourly_forecast (request):
 def daily_forecast(request):
     return render(request, 'daily_forecast.html')
 
+def map (request):
+    city = request.GET.get('city')
+    owm = OWM('5bb16486eac2780614b1d9c1457c5f51')
+    mgr = owm.weather_manager()
+    observation = mgr.weather_at_place(city)
+    location = observation.location
+    latitude = round(location.lat)
+    longitude = round(location.lon)
+    data = {
+        'lat' : latitude,
+        'lon' : longitude,
+        'city' : city
+    }
+    return render(request, 'map.html', data)
+
 
 def register (request):
     if request.method == 'POST':

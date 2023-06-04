@@ -11,7 +11,7 @@
             display: flex;
             flex-direction: column;
         }  
-              
+
         img {
             width: 50px;
             height: 50px;
@@ -34,7 +34,7 @@
             background-size: cover;
             background-position: center;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;    
             align-items: center;
             justify-content: center;
             min-height: 100vh;
@@ -73,8 +73,8 @@
             top: 10px;
             left: 10px;
             z-index: 2;
-            margin-left: 340px;
-            margin-top: 115px;
+            margin-left: 390px;
+            margin-top: 75px;
         }
 
         .city-name {
@@ -86,12 +86,12 @@
             left: 60px;
             z-index: 2;
             font-size: 30px;
-            margin-left: 330px;
-            margin-top: 115px;
+            margin-left: 390px;
+            margin-top: 75px;
         }
 
         .temp-label{
-            margin-top: 120px;
+            margin-top: 100px;
         }
 
         .temp-feel-like-label{
@@ -108,32 +108,67 @@
         .humidity-label {
             margin-top: 0px;
         }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            text-decoration: none;
+            background-color: green;
+            color: white;
+            border-radius: 4px;
+        }
+        
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .weather-container {
+            margin: 0 auto;
+            display: flex;
+            flex-direction: row;
+            position: relative;
+        }
     </style>
 </head>
 <body>
     <img src = "{% static 'location.png' %}" class="location-image">
     <p class = "city-name">{{ city }}</p>
-    <div class="weather-labels">
-        <p class = "hour"> </p>
-        <p class = "date"> </p>
-        <p class="temp-label"> temperature </p>
-        <p class = "wind"> wind m/s</p>
-        <p class = "temp-feel-like-label">feels like</p>
-        <p class = "pressure-label">pressure</p>
-        <p class = "humidity-label">humidity</p>
-    </div>
-    {% for weather in forecast %}
-        <div class="weather-card-tomorrow">
-            <p class = "hour">{{ weather.hour }}</p>
-            <p class = "date">{{ weather.date }}</p>
-            <img src="{% static weather.status %}" class="status-img">
-            <p class="temp-rn">{{ weather.temperature }} °C</p>
-            <img src="{% static 'wind.jpg' %}" class="wind-picture">
-            <p class = "wind">{{weather.wind}} m/s</p>
-            <p class = "temp-feel-like">{{ weather.temperature_feel_like }} °C</p>
-            <p class = "pressure">{{ weather.pressure }} hPa</p>
-            <p class = "humidity">{{ weather.humidity }} %</p>
+    <div class = "weather-container">
+        <div class="weather-labels">
+            <p class = "hour"> </p>
+            <p class = "date"> </p>
+            <p class="temp-label"> temperature </p>
+            <p class = "wind"> wind m/s</p>
+            <p class = "temp-feel-like-label">feels like</p>
+            <p class = "pressure-label">pressure</p>
+            <p class = "humidity-label">humidity</p>
         </div>
-    {% endfor %}
+        {% for weather in forecast %}
+            <div class="weather-card-tomorrow">
+                <p class = "hour">{{ weather.hour }}</p>
+                <p class = "date">{{ weather.date }}</p>
+                <img src="{% static weather.status %}" class="status-img">
+                <p class="temp-rn">{{ weather.temperature }} °C</p>
+                <img src="{% static 'wind.jpg' %}" class="wind-picture">
+                <p class = "wind">{{weather.wind}} m/s</p>
+                <p class = "temp-feel-like">{{ weather.temperature_feel_like }} °C</p>
+                <p class = "pressure">{{ weather.pressure }} hPa</p>
+                <p class = "humidity">{{ weather.humidity }} %</p>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="button-container">
+        <a href="/hourly-forecast?city={{ city }}" class="button">Hourly Forecast</a>
+        <a href="/daily-forecast?city={{ city }}" class="button">Daily Forecast</a>
+        <a href="/maps?city={{city}}" class="button">Maps</a>
+    </div>
 </body>
 </html>
