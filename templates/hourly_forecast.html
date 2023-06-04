@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hourly Forecast</title>
+    <style>
+        .weather-labels {
+            margin: 5px;
+            padding: 20px;
+            width: 55px;
+            display: flex;
+            flex-direction: column;
+        }  
+              
+        img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .weather-card-tomorrow {
+            margin: 5px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 55px;
+            display: flex;
+            flex-direction: column;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url("{% static 'bluesky3.jpg' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .hour, .wind, .humidity{
+            text-align: center;
+            margin-bottom: 0px;
+        }
+        .pressure{
+            text-align: center;
+            margin-bottom: 0px;
+            font-size: 13px;
+        }
+
+        .date, .temp-feel-like {
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .temp-rn{
+            color: rgb(247, 137, 53);
+            text-align: center;
+        }
+
+        .wind-picture {
+            width: 30px;
+            height: auto;
+            margin-left: 10px;
+        }
+
+        .location-image {
+            width: 40px;
+            height: auto;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 2;
+            margin-left: 340px;
+            margin-top: 115px;
+        }
+
+        .city-name {
+            margin-top: 10px;
+            width: 40px;
+            height: auto;
+            position: absolute;
+            top: 10px;
+            left: 60px;
+            z-index: 2;
+            font-size: 30px;
+            margin-left: 330px;
+            margin-top: 115px;
+        }
+
+        .temp-label{
+            margin-top: 120px;
+        }
+
+        .temp-feel-like-label{
+            font-size: 15px;
+            margin-top: 30px;
+        }
+
+        .pressure.label {
+            font-size: 10px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        .humidity-label {
+            margin-top: 0px;
+        }
+    </style>
+</head>
+<body>
+    <img src = "{% static 'location.png' %}" class="location-image">
+    <p class = "city-name">{{ city }}</p>
+    <div class="weather-labels">
+        <p class = "hour"> </p>
+        <p class = "date"> </p>
+        <p class="temp-label"> temperature </p>
+        <p class = "wind"> wind m/s</p>
+        <p class = "temp-feel-like-label">feels like</p>
+        <p class = "pressure-label">pressure</p>
+        <p class = "humidity-label">humidity</p>
+    </div>
+    {% for weather in forecast %}
+        <div class="weather-card-tomorrow">
+            <p class = "hour">{{ weather.hour }}</p>
+            <p class = "date">{{ weather.date }}</p>
+            <img src="{% static weather.status %}" class="status-img">
+            <p class="temp-rn">{{ weather.temperature }} °C</p>
+            <img src="{% static 'wind.jpg' %}" class="wind-picture">
+            <p class = "wind">{{weather.wind}} m/s</p>
+            <p class = "temp-feel-like">{{ weather.temperature_feel_like }} °C</p>
+            <p class = "pressure">{{ weather.pressure }} hPa</p>
+            <p class = "humidity">{{ weather.humidity }} %</p>
+        </div>
+    {% endfor %}
+</body>
+</html>

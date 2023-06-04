@@ -39,6 +39,10 @@ def get_weather_info_for_second_page(city):
     date = datetime.date.today()
     date = date.strftime('%d-%m-%Y')
 
+    current_time = datetime.datetime.now()
+    hour_part_now = current_time.strftime("%H")
+    hour_part_now = int(hour_part_now)
+
     tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
     tomorrow = tomorrow.strftime('%Y-%m-%d')
 
@@ -49,7 +53,7 @@ def get_weather_info_for_second_page(city):
     day_after_tomorrow_formatted = day_after_tomorrow.strftime('%d-%m-%Y')
 
     return round(min_temp), round(max_temp), round(current_temp), round(temp_feels_like), status, humidity, round(wind_speed),\
-    date, tomorrow, day_of_week_after_tomorrow, day_after_tomorrow_formatted
+    date, tomorrow, day_of_week_after_tomorrow, day_after_tomorrow_formatted, hour_part_now
 
 
 
@@ -110,6 +114,61 @@ def get_weather_forecast(city):
         weather_info.append(forecast_data)
     
     return weather_info
+
+def get_weather_for_day(city):
+    owm = OWM('5bb16486eac2780614b1d9c1457c5f51')
+    mgr = owm.weather_manager()
+    forecast = mgr.forecast_at_place(city, '3h')
+    weather_list = forecast.forecast
+    result = []
+    counter = 0
+    for weather in weather_list:
+        if counter < 8:
+            counter += 1
+        else:
+            break
+        date = weather.reference_time('date').strftime('%m-%d')
+        hour = weather.reference_time('date').strftime('%H:%M')
+        temperature = weather.temperature(unit='celsius')
+        temp = temperature['temp']
+        temp_feels_like = temperature['feels_like']
+        humidity = weather.humidity
+        wind_speed = weather.wind().get('speed')
+        status = weather.status
+        pressure = weather.pressure['press']
+        rain = weather.rain
+        status_pictures = {
+            'clear' : 'clear.jpg',
+            'ash' : 'ash.jpg',
+            'clouds' : 'clouds.jpg',
+            'drizzle' : 'drizzle.jpg',
+            'dust' : 'dust.jpg',
+            'fog' : 'fog.jpg',
+            'haze' : 'haze.jpg',
+            'mist' : 'mist.jpg',
+            'rain' : 'rain.jpg',
+            'sand' : 'sand.jpg',
+            'smoke' : 'smoke.jpg',
+            'snow' : 'snow.jpg',
+            'squall' : 'squall.jpg',
+            'thunderstorm' : 'thunderstorm.jpg',
+            'tornado' : 'tornado.jpg'
+        }
+        status_image = status_pictures.get(status.lower(), 'default_image.jpg')
+        to_add = {
+            'city' : city,
+            'date' : date,
+            'hour' : hour,
+            'temperature' : round(temp),
+            'temperature_feel_like' : round(temp_feels_like),
+            'humidity' : humidity,
+            'wind' : round(wind_speed),
+            'status' : status_image,
+            'pressure' : pressure,
+            'rain' : rain
+        }
+        result.append(to_add)
+    return result
 
 
 
@@ -218,7 +277,8 @@ def current_weather(request):
                 'tomorrow_tomorrow_humidity' : round(tomorrow_tomorrow_data['humidity']),
                 'most_common_status_tomorrow_tomorrow' : status_image_tomorrow_tomorrow,
                 'tomorrow_tomorrow_min_temp' : round(tomorrow_tomorrow_data['min_temp']),
-                'tomorrow_tomorrow_max_temp' : round (tomorrow_tomorrow_data['max_temp'])
+                'tomorrow_tomorrow_max_temp' : round (tomorrow_tomorrow_data['max_temp']),
+                'hour_part_now' : weather_info[11]
             }
             data['tomorrow_status'] = tomorrow_data['most_common_status']
             return render(request, 'current_weather.html', data)
@@ -226,6 +286,19 @@ def current_weather(request):
     else:
         return render(request, 'start_page.html')
 
+def hourly_forecast (request):
+    if request.method == 'GET':
+        location = request.GET.get('city')
+        forecast_for_day = get_weather_for_day(location)
+        data = {
+            'city' : location,
+            'forecast': forecast_for_day
+        }
+        return render(request, 'hourly_forecast.html', data)
+
+
+def daily_forecast(request):
+    return render(request, 'daily_forecast.html')
 
 
 def register (request):
