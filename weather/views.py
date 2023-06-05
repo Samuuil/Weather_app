@@ -8,7 +8,7 @@ from collections import Counter
 
 
 def get_weather_info_for_home_page(city):
-    owm = OWM('5bb16486eac2780614b1d9c1457c5f51')
+    owm = OWM('ddf4d329a74648df1a6e7d22d7050654')
     mgr = owm.weather_manager()
     observation = mgr.weather_at_place(city)
     weather = observation.weather
@@ -21,7 +21,7 @@ def get_weather_info_for_home_page(city):
 
 
 def get_weather_info_for_second_page(city):
-    owm = OWM('5bb16486eac2780614b1d9c1457c5f51')
+    owm = OWM('ddf4d329a74648df1a6e7d22d7050654')
     mgr = owm.weather_manager()
     observation = mgr.weather_at_place(city)
     weather = observation.weather
@@ -58,7 +58,7 @@ def get_weather_info_for_second_page(city):
 
 
 def get_weather_forecast(city):
-    owm = OWM('5bb16486eac2780614b1d9c1457c5f51')
+    owm = OWM('ddf4d329a74648df1a6e7d22d7050654')
     mgr = owm.weather_manager()
     forecast = mgr.forecast_at_place(city, '3h')
     weather_list = forecast.forecast
@@ -116,7 +116,7 @@ def get_weather_forecast(city):
     return weather_info
 
 def get_weather_for_day(city):
-    owm = OWM('5bb16486eac2780614b1d9c1457c5f51')
+    owm = OWM('ddf4d329a74648df1a6e7d22d7050654')
     mgr = owm.weather_manager()
     forecast = mgr.forecast_at_place(city, '3h')
     weather_list = forecast.forecast
@@ -302,7 +302,7 @@ def daily_forecast(request):
 
 def map (request):
     city = request.GET.get('city')
-    owm = OWM('5bb16486eac2780614b1d9c1457c5f51')
+    owm = OWM('ddf4d329a74648df1a6e7d22d7050654')
     mgr = owm.weather_manager()
     observation = mgr.weather_at_place(city)
     location = observation.location

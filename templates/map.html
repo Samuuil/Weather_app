@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,26 +10,90 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""></script>
 <style>
-    #map{
-        height: 1000px;
-}
+    #map1{
+        width: 600px;
+        height: 350px;
+        margin-bottom: 20px;
+    }
+
+    #map2{
+        width: 600px;
+        height: 350px;
+        margin-bottom: 20px;
+    }
+
+    #map3{
+        width: 600px;
+        height: 350px;
+        margin-bottom: 20px;
+    }
+
+    body {
+            margin: 0;
+            padding: 0;
+            background-image: url("{% static 'bluesky3.jpg' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;    
+            align-items: center;
+            justify-content: center;
+        }
+
+        .label {
+            font-size: 30px;
+        }
 </style>
 <body>
-    <div id="map"></div>
+    <p class = "label">Temperature</p>
+    <div id="map1"></div>
+    <p class = "label">Wind</p>
+    <div id="map2"></div>
+    <p class = "label">Clouds</p>
+    <div id="map3"></div>
 
     <script>
         const latitude = {{ lat }};
         const longitude = {{ lon }};
-        const map = L.map('map').setView([latitude, longitude], 7);
-        const layer = 'wind_new';
-        const API_key = '5bb16486eac2780614b1d9c1457c5f51';
+        const map1 = L.map('map1', {scrollWheelZoom: false}).setView([latitude, longitude], 7);
+        const map2 = L.map('map2', {scrollWheelZoom: false}).setView([latitude, longitude], 7);
+        const map3 = L.map('map3', {scrollWheelZoom: false}).setView([latitude, longitude], 7);
+        const layer1 = 'temp_new';
+        const layer2 = 'wind_new';
+        const layer3 = 'clouds_new';
+        const API_key = 'ddf4d329a74648df1a6e7d22d7050654';
         const baseLayerUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        const url = `https://tile.openweathermap.org/map/${layer}/{z}/{x}/{y}.png?appid=${API_key}`;
+        const url1 = `https://tile.openweathermap.org/map/${layer1}/{z}/{x}/{y}.png?appid=${API_key}`;
+        const url2 = `https://tile.openweathermap.org/map/${layer2}/{z}/{x}/{y}.png?appid=${API_key}`;
+        const url3 = `https://tile.openweathermap.org/map/${layer3}/{z}/{x}/{y}.png?appid=${API_key}`;
         const attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+    
+        L.tileLayer(baseLayerUrl, { attribution }).addTo(map1);
 
-        L.tileLayer(baseLayerUrl, { attribution }).addTo(map);
+        L.tileLayer(url1, { attribution }).addTo(map1);
 
-        L.tileLayer(url, { attribution }).addTo(map);
+        L.tileLayer(baseLayerUrl, { attribution }).addTo(map2);
+
+        L.tileLayer(url2, { attribution }).addTo(map2);
+
+        L.tileLayer(baseLayerUrl, { attribution }).addTo(map3);
+
+        L.tileLayer(url3, { attribution }).addTo(map3);
+        // // Base layer
+        // const baseLayer = L.tileLayer(baseLayerUrl, { attribution });
+    
+        // // Temperature map layer
+        // const temperatureLayer = L.tileLayer(url1, { attribution }).addTo(map1);
+        // baseLayer.addTo(map1);
+    
+        // // Wind map layer
+        // const windLayer = L.tileLayer(url2, { attribution }).addTo(map2);
+        // baseLayer.addTo(map2);
+    
+        // // Clouds map layer
+        // const cloudsLayer = L.tileLayer(url3, { attribution }).addTo(map3);
+        // baseLayer.addTo(map3);
     </script>
 </body>
 </html>
