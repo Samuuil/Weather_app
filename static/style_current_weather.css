@@ -1,6 +1,84 @@
 
 
- 
+.city-name {
+    margin-top: 10px;
+    width: 40px;
+    height: auto;
+    position: absolute;
+    top: 10px;
+    left: 60px;
+    z-index: 2;
+    font-size: 30px;
+    margin-left: 370px;
+    margin-top: 95px;
+}
+
+.weather-card-now {
+    padding: 20px;
+    margin: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative; 
+}
+
+.weather-card-tomorrow {
+    margin: 10px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.location-image {
+    width: 40px;
+    height: auto;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    margin-left: 370px;
+    margin-top: 90px;
+}
+
+.weather-container {
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-top: 200px;
+}
+
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    text-decoration: none;
+    background-color: green;
+    color: white;
+    border-radius: 4px;
+}
+
+.button:hover {
+    background-color: #45a049;
+}
+
  
 .weather-card h2 {
 	margin-top: 0;

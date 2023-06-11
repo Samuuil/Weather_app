@@ -41,7 +41,7 @@ def get_weather_info_for_second_page(city):
 
     current_time = datetime.datetime.now()
     hour_part_now = current_time.strftime("%H")
-    hour_part_now = int(hour_part_now)
+    hour_part_now_formatted = int(hour_part_now)
 
     tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
     tomorrow = tomorrow.strftime('%Y-%m-%d')
@@ -53,7 +53,7 @@ def get_weather_info_for_second_page(city):
     day_after_tomorrow_formatted = day_after_tomorrow.strftime('%d-%m-%Y')
 
     return round(min_temp), round(max_temp), round(current_temp), round(temp_feels_like), status, humidity, round(wind_speed),\
-    date, tomorrow, day_of_week_after_tomorrow, day_after_tomorrow_formatted, hour_part_now
+    date, tomorrow, day_of_week_after_tomorrow, day_after_tomorrow_formatted, hour_part_now_formatted
 
 
 
@@ -96,23 +96,43 @@ def get_weather_forecast(city):
         weather_data[date]['wind_speeds'].append(wind_speed)
         weather_data[date]['humidities'].append(humidity)
 
+    status_pictures = {
+        'clear': 'clear.jpg',
+        'ash': 'ash.jpg',
+        'clouds': 'clouds.jpg',
+        'drizzle': 'drizzle.jpg',
+        'dust': 'dust.jpg',
+        'fog': 'fog.jpg',
+        'haze': 'haze.jpg',
+        'mist': 'mist.jpg',
+        'rain': 'rain.jpg',
+        'sand': 'sand.jpg',
+        'smoke': 'smoke.jpg',
+        'snow': 'snow.jpg',
+        'squall': 'squall.jpg',
+        'thunderstorm': 'thunderstorm.jpg',
+        'tornado': 'tornado.jpg'
+    }
+
     weather_info = []
     for date, data in weather_data.items():
         avg_wind_speed = sum(data['wind_speeds']) / len(data['wind_speeds'])
         avg_humidity = sum(data['humidities']) / len(data['humidities'])
         most_common_status = Counter(daily_status[date]).most_common(1)[0][0]
+        status_image = status_pictures.get(most_common_status.lower(), 'default_image.jpg')
 
         forecast_data = {
             'date': date,
-            'min_temp': data['min_temp'],
-            'max_temp': data['max_temp'],
-            'wind_speed': avg_wind_speed,
-            'humidity': avg_humidity,
-            'most_common_status': most_common_status
+            'min_temp': round(data['min_temp']),
+            'max_temp': round(data['max_temp']),
+            'wind_speed': round(avg_wind_speed),
+            'humidity': round(avg_humidity),
+            'most_common_status': most_common_status,
+            'most_common_status_pic': status_image
         }
-        
+
         weather_info.append(forecast_data)
-    
+
     return weather_info
 
 def get_weather_for_day(city):
@@ -155,6 +175,9 @@ def get_weather_for_day(city):
             'tornado' : 'tornado.jpg'
         }
         status_image = status_pictures.get(status.lower(), 'default_image.jpg')
+
+        hour_part_now = weather.reference_time('date').strftime('%H')
+        hour_part_now_format = int(hour_part_now)
         to_add = {
             'city' : city,
             'date' : date,
@@ -165,7 +188,8 @@ def get_weather_for_day(city):
             'wind' : round(wind_speed),
             'status' : status_image,
             'pressure' : pressure,
-            'rain' : rain
+            'rain' : rain,
+            'hour_part_now' : hour_part_now_format
         }
         result.append(to_add)
     return result
@@ -298,7 +322,14 @@ def hourly_forecast (request):
 
 
 def daily_forecast(request):
-    return render(request, 'daily_forecast.html')
+    if request.method == 'GET':
+        location = request.GET.get('city')
+        daily_forecast = get_weather_forecast(location)
+        data = {
+            'city' : location,
+            'forecast' : daily_forecast
+        }
+        return render(request, 'daily_forecast.html', data)
 
 def map (request):
     city = request.GET.get('city')
@@ -357,3 +388,16 @@ def login(request):
             return redirect('login')
     else:
         return render(request, 'login.html')
+
+
+
+
+# def daily_forecast(request):
+#     if request.method == 'GET':
+#         location = request.GET.get('city')
+#         daily_forecast = get_weather_forecast(location)
+#         data = {
+#             'city' : location,
+#             'forecast' : daily_forecast
+#         }
+#         return render(request, 'daily_forecast.html', data)

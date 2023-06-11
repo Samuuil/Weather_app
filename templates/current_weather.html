@@ -108,7 +108,7 @@
         <div class="weather-card-now">
             <h2>The weather now</h2>
             <div class="weather-status-pic">
-                {% if hour_part_now > 20 and status == 'clear'%}
+                {% if hour_part_now < 7 or hour_part_now > 20 and status == 'Clear'%}
                     <img src="{% static 'moon.jpg' %}" class="status-img">
                 {% else %}
                     <img src="{% static status_pic %}" class="status-img">

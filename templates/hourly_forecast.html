@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Hourly Forecast</title>
+    <link rel="stylesheet" href="{% static 'hourly_forecast.css' %}">
     <style>
         .weather-labels {
             margin: 5px;
@@ -40,102 +41,7 @@
             min-height: 100vh;
         }
 
-        .hour, .wind, .humidity{
-            text-align: center;
-            margin-bottom: 0px;
-        }
-        .pressure{
-            text-align: center;
-            margin-bottom: 0px;
-            font-size: 13px;
-        }
-
-        .date, .temp-feel-like {
-            font-size: 15px;
-            text-align: center;
-        }
-
-        .temp-rn{
-            color: rgb(247, 137, 53);
-            text-align: center;
-        }
-
-        .wind-picture {
-            width: 30px;
-            height: auto;
-            margin-left: 10px;
-        }
-
-        .location-image {
-            width: 40px;
-            height: auto;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 2;
-            margin-left: 390px;
-            margin-top: 75px;
-        }
-
-        .city-name {
-            margin-top: 10px;
-            width: 40px;
-            height: auto;
-            position: absolute;
-            top: 10px;
-            left: 60px;
-            z-index: 2;
-            font-size: 30px;
-            margin-left: 390px;
-            margin-top: 75px;
-        }
-
-        .temp-label{
-            margin-top: 100px;
-        }
-
-        .temp-feel-like-label{
-            font-size: 15px;
-            margin-top: 30px;
-        }
-
-        .pressure.label {
-            font-size: 10px;
-            margin-top: 0px;
-            margin-bottom: 0px;
-        }
-
-        .humidity-label {
-            margin-top: 0px;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
         
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 0 10px;
-            font-size: 16px;
-            text-decoration: none;
-            background-color: green;
-            color: white;
-            border-radius: 4px;
-        }
-        
-        .button:hover {
-            background-color: #45a049;
-        }
-
-        .weather-container {
-            margin: 0 auto;
-            display: flex;
-            flex-direction: row;
-            position: relative;
-        }
     </style>
 </head>
 <body>
@@ -154,8 +60,17 @@
         {% for weather in forecast %}
             <div class="weather-card-tomorrow">
                 <p class = "hour">{{ weather.hour }}</p>
-                <p class = "date">{{ weather.date }}</p>
-                <img src="{% static weather.status %}" class="status-img">
+                <p class = "date">{{ weather.date }}</p>    
+                <!-- {% if hour_part_now > 20 and status == 'Clear'%}
+                    <img src="{% static 'moon.jpg' %}" class="status-img">
+                {% else %}
+                    <img src="{% static weather.status %}" class="status-img">
+                {% endif %} -->
+                {% if weather.hour_part_now < 7 or weather.hour_part_now > 20 and weather.status == 'Clear'%}
+                    <img src="{% static 'moon.jpg' %}" class="status-img">
+                {% else %}
+                    <img src="{% static weather.status %}" class="status-img">
+                {% endif %}
                 <p class="temp-rn">{{ weather.temperature }} °C</p>
                 <img src="{% static 'wind.jpg' %}" class="wind-picture">
                 <p class = "wind">{{weather.wind}} m/s</p>
