@@ -4,11 +4,19 @@ from django.contrib import messages
 from pyowm import OWM
 import datetime
 from collections import Counter
+import os
 # Create your views here.
 
+def get_api_key():
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(script_dir, 'apikey.txt')
+    
+    with open(file_path, 'r') as file:
+        api_key = file.readline().strip()
+    return api_key
 
 def get_weather_info_for_home_page(city):
-    owm = OWM('ddf4d329a74648df1a6e7d22d7050654')
+    owm = OWM(get_api_key())
     mgr = owm.weather_manager()
     observation = mgr.weather_at_place(city)
     weather = observation.weather
@@ -21,7 +29,7 @@ def get_weather_info_for_home_page(city):
 
 
 def get_weather_info_for_second_page(city):
-    owm = OWM('ddf4d329a74648df1a6e7d22d7050654')
+    owm = OWM(get_api_key())
     mgr = owm.weather_manager()
     observation = mgr.weather_at_place(city)
     weather = observation.weather
@@ -58,7 +66,7 @@ def get_weather_info_for_second_page(city):
 
 
 def get_weather_forecast(city):
-    owm = OWM('ddf4d329a74648df1a6e7d22d7050654')
+    owm = OWM(get_api_key())
     mgr = owm.weather_manager()
     forecast = mgr.forecast_at_place(city, '3h')
     weather_list = forecast.forecast
@@ -136,7 +144,7 @@ def get_weather_forecast(city):
     return weather_info
 
 def get_weather_for_day(city):
-    owm = OWM('ddf4d329a74648df1a6e7d22d7050654')
+    owm = OWM(get_api_key())
     mgr = owm.weather_manager()
     forecast = mgr.forecast_at_place(city, '3h')
     weather_list = forecast.forecast
@@ -333,7 +341,8 @@ def daily_forecast(request):
 
 def map (request):
     city = request.GET.get('city')
-    owm = OWM('ddf4d329a74648df1a6e7d22d7050654')
+    api = get_api_key()
+    owm = OWM(api)
     mgr = owm.weather_manager()
     observation = mgr.weather_at_place(city)
     location = observation.location
@@ -342,7 +351,8 @@ def map (request):
     data = {
         'lat' : latitude,
         'lon' : longitude,
-        'city' : city
+        'city' : city,
+        'api' : api
     }
     return render(request, 'map.html', data)
 
@@ -389,15 +399,3 @@ def login(request):
     else:
         return render(request, 'login.html')
 
-
-
-
-# def daily_forecast(request):
-#     if request.method == 'GET':
-#         location = request.GET.get('city')
-#         daily_forecast = get_weather_forecast(location)
-#         data = {
-#             'city' : location,
-#             'forecast' : daily_forecast
-#         }
-#         return render(request, 'daily_forecast.html', data)

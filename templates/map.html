@@ -44,6 +44,27 @@
     .label {
         font-size: 30px;
     }
+
+    .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 0 10px;
+        font-size: 16px;
+        text-decoration: none;
+        background-color: green;
+        color: white;
+        border-radius: 4px;
+    }
+    
+    .button:hover {
+        background-color: #45a049;
+    }
 </style>
 <body>
     <p class = "label">Temperature</p>
@@ -62,7 +83,7 @@
         const layer1 = 'temp_new';
         const layer2 = 'wind_new';
         const layer3 = 'clouds_new';
-        const API_key = 'ddf4d329a74648df1a6e7d22d7050654';
+        const API_key = '{{ api }}';
         const baseLayerUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         const url1 = `https://tile.openweathermap.org/map/${layer1}/{z}/{x}/{y}.png?appid=${API_key}`;
         const url2 = `https://tile.openweathermap.org/map/${layer2}/{z}/{x}/{y}.png?appid=${API_key}`;
@@ -81,5 +102,10 @@
 
         L.tileLayer(url3, { attribution }).addTo(map3);
     </script>
+    <div class="button-container">
+        <a href="/hourly-forecast?city={{ city }}" class="button">Hourly Forecast</a>
+        <a href="/daily-forecast?city={{ city }}" class="button">Daily Forecast</a>
+        <a href="/maps?city={{city}}" class="button">Maps</a>
+    </div>
 </body>
 </html>
